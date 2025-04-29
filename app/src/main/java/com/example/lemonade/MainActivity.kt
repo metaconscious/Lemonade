@@ -7,12 +7,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -86,39 +86,37 @@ fun LemonadeMaker(modifier: Modifier = Modifier) {
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Button(
-            onClick = {
-                when (state) {
-                    LemonadeAppState.Select -> {
-                        squeezeTimes = (1..3).random()
-                        state = LemonadeAppState.Squeeze
-                    }
-
-                    LemonadeAppState.Squeeze -> {
-                        --squeezeTimes
-                        if (squeezeTimes < 1) {
-                            state = LemonadeAppState.Drink
-                        } else {
+        Image(
+            painter = painterResource(resource.imageRes),
+            contentDescription = stringResource(resource.descriptionRes),
+            modifier = Modifier
+                .background(color = Color.Unspecified)
+                .clickable {
+                    when (state) {
+                        LemonadeAppState.Select -> {
+                            squeezeTimes = (1..3).random()
                             state = LemonadeAppState.Squeeze
                         }
-                    }
 
-                    LemonadeAppState.Drink -> {
-                        state = LemonadeAppState.Restart
-                    }
+                        LemonadeAppState.Squeeze -> {
+                            --squeezeTimes
+                            if (squeezeTimes < 1) {
+                                state = LemonadeAppState.Drink
+                            } else {
+                                state = LemonadeAppState.Squeeze
+                            }
+                        }
 
-                    LemonadeAppState.Restart -> {
-                        state = LemonadeAppState.Select
+                        LemonadeAppState.Drink -> {
+                            state = LemonadeAppState.Restart
+                        }
+
+                        LemonadeAppState.Restart -> {
+                            state = LemonadeAppState.Select
+                        }
                     }
                 }
-            }
-        ) {
-            Image(
-                painter = painterResource(resource.imageRes),
-                contentDescription = stringResource(resource.descriptionRes),
-                modifier = Modifier.background(color = Color.Unspecified)
-            )
-        }
+        )
         Spacer(modifier = Modifier.padding(16.dp))
         Text(text = stringResource(resource.textRes))
     }
